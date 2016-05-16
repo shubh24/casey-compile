@@ -47,7 +47,7 @@ if __name__ == '__main__':
 	input_file_name = sys.argv[1]
 	output_file_name = sys.argv[2]
 	
-	clip = VideoFileClip(video_file_name) 
+	clip = VideoFileClip(input_file_name) 
 	frames = clip.iter_frames()
 	selected_frames = detect_faces(frames)
 
