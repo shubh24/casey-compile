@@ -44,7 +44,10 @@ def compile():
 
 if __name__ == '__main__':
 	
-	clip = VideoFileClip("She_Wasn_t_Wearing_a_Shirt.mp4") #Enter name of video here
+	input_file_name = sys.argv[1]
+	output_file_name = sys.argv[2]
+	
+	clip = VideoFileClip(video_file_name) 
 	frames = clip.iter_frames()
 	selected_frames = detect_faces(frames)
 
@@ -52,4 +55,4 @@ if __name__ == '__main__':
 
 	final_clip = compile()
 
-	final_clip.write_videofile("Casey_Compile.mp4")
+	final_clip.write_videofile(output_file_name)
