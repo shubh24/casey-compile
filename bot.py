@@ -1,6 +1,6 @@
 #from compile import *
 
-from flask import Flask, request, Response
+from flask import Flask, request, Response, jsonify
 import json
 import requests
 
@@ -13,12 +13,12 @@ app.config.update(
     DEBUG = True,
 )
 
-@app.route("/compile", methods = ['GET', 'POST'])
-def interact():
-    if request.method == 'GET':
-        return "OKAY"
+@app.route("/compile/", methods = ['POST'])
+def interact(vlog_url = None):
     if request.method == 'POST':
-    	return "POST OKAY"
+    	vlog_url = request.args.get('vlog_url', '')
+    	j = {'vlog_url' : vlog_url}
+    	return jsonify(**j)
 
 @app.route('/')
 def hello():
