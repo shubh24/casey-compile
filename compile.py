@@ -4,6 +4,7 @@ import cv2
 import sys
 
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+frames_count = 24
 
 def cluster(data, maxgap):
     groups = [[data[0]]]
@@ -18,10 +19,10 @@ def detect_faces(frames):
 	selected_frames = []
 	counter = 0
 	for img in frames:
-		if counter%30 == 0:
+		if counter%frames_count == 0:
 			sys.stdout.flush()
 			sys.stdout.write('\r')
-			sys.stdout.write(str(int(counter/30)) + " seconds done...")
+			sys.stdout.write(str(int(counter/frames_count)) + " seconds done...")
 			faces = face_cascade.detectMultiScale(img, 1.3, 5)
 			if len(faces) > 0:
 				face_percentage = 0
@@ -30,7 +31,7 @@ def detect_faces(frames):
 					height = f[3]
 					face_percentage += (width*height)/(len(img)*len(img[0]))*100
 				if face_percentage > 15:
-					selected_frames.append(counter/30)
+					selected_frames.append(counter/frames_count)
 		counter += 1
 	sys.stdout.write('\n')	
 	return selected_frames
