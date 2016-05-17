@@ -1,4 +1,5 @@
 Flask==0.10.1
 moviepy==0.2.2.11
+pytube==6.1.8
 requests==2.9.1
 cv2==1.0

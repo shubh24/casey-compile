@@ -17,7 +17,8 @@ app.config.update(
 def interact(vlog_url = None):
     if request.method == 'POST':
     	vlog_url = request.args.get('vlog_url', '')
-    	j = {'vlog_url' : vlog_url}
+    	output_vlog_url = doIt(vlog_url)
+    	j = {'output_vlog_url' : output_vlog_url}
     	return jsonify(**j)
 
 @app.route('/')

@@ -1,7 +1,9 @@
 from __future__ import division
 from moviepy.editor import *
 import cv2
-import sys
+import sys, os
+from pytube import YouTube
+
 
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 frames_count = 24
@@ -36,24 +38,39 @@ def detect_faces(frames):
 	sys.stdout.write('\n')	
 	return selected_frames
 
-def compile():
+def compile(groups, clip):
 
 	clips = [clip.subclip(g[0], g[-1]) for g in groups]
 
 	return concatenate_videoclips([c for c in clips])
 
 
+def doIt(vlog_url):
+
+	y = YouTube(vlog_url)
+	print 'yo'
+	if (y.filename + '.mp4') not in os.listdir("."):
+		print "downloading"
+		y.get('mp4','360p').download('.')
+		print "downloaded"
+
+	if y.filename + '_compile.mp4' not in os.listdir("."):
+		clip = VideoFileClip(y.filename + '.mp4') 
+		frames = clip.iter_frames()
+		selected_frames = detect_faces(frames)
+
+		groups = cluster(selected_frames, maxgap = 10)
+
+		final_clip = compile(groups, clip)
+
+		final_clip.write_videofile(y.filename + "_compile.mp4")
+
+	return y.filename + "_compile.mp4"
+
 if __name__ == '__main__':
 	
-	input_file_name = sys.argv[1]
-	output_file_name = sys.argv[2]
+	# input_file_name = sys.argv[1]
+	# output_file_name = sys.argv[2]
 	
-	clip = VideoFileClip(input_file_name) 
-	frames = clip.iter_frames()
-	selected_frames = detect_faces(frames)
-
-	groups = cluster(selected_frames, maxgap = 10)
-
-	final_clip = compile()
-
-	final_clip.write_videofile(output_file_name)
+	doIt("https://www.youtube.com/watch?v=cVC6WO_SEmw")
+	
