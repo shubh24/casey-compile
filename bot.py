@@ -16,9 +16,9 @@ app.config.update(
 @app.route("/compile", methods = ['GET', 'POST'])
 def interact():
     if request.method == 'GET':
-        return "OKAY"
+        return {"response" : "OKAY"}
     if request.method == 'POST':
-    	return "POST OKAY"
+    	return {"response" : "POST OKAY"}
 
 @app.route('/')
 def hello():
