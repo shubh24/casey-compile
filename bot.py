@@ -13,7 +13,7 @@ app.config.update(
     DEBUG = True,
 )
 
-@app.route("/compile/", methods = ['POST'])
+@app.route("/compile", methods = ['POST'])
 def interact(vlog_url = None):
     if request.method == 'POST':
     	vlog_url = request.args.get('vlog_url', '')
