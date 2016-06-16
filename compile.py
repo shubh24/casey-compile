@@ -46,16 +46,24 @@ def compile(groups, clip):
 
 
 def doIt(vlog_url):
+		
+	flag = 0
+	while ( flag == 0):
+	    try:	
+	
+		y = YouTube(vlog_url)
+		flag=1
+	    except:
+		flag = 0
+	title = y.title.replace(" ","-")
+	y.set_filename(title)
 
-	y = YouTube(vlog_url)
-	print 'yo'
-	if (y.filename + '.mp4') not in os.listdir("."):
-		print "downloading"
+	if (('%s.mp4'%(title)) not in os.listdir('.')):
 		y.get('mp4','360p').download('.')
-		print "downloaded"
-
-	if y.filename + '_compile.mp4' not in os.listdir("."):
-		clip = VideoFileClip(y.filename + '.mp4') 
+			
+	if '%s_compile.mp4'%(title) not in os.listdir("."):
+		clip = VideoFileClip('%s.mp4'%(title))
+ 
 		frames = clip.iter_frames()
 		selected_frames = detect_faces(frames)
 
@@ -63,14 +71,14 @@ def doIt(vlog_url):
 
 		final_clip = compile(groups, clip)
 
-		final_clip.write_videofile(y.filename + "_compile.mp4")
+		final_clip.write_videofile('%s_compile.avi'%(title), codec='libx264', fps = frames_count)
 
-	return y.filename + "_compile.mp4"
+	return y.title + "_compile.mp4"
 
 if __name__ == '__main__':
 	
 	# input_file_name = sys.argv[1]
 	# output_file_name = sys.argv[2]
 	
-	doIt("https://www.youtube.com/watch?v=cVC6WO_SEmw")
+	doIt("https://www.youtube.com/watch?v=yGtza5cGgK0")
 	
