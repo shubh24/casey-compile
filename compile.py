@@ -81,7 +81,7 @@ def doIt(vlog_url):
 
     os.system('python upload_video.py --file="%s" --title="%s" --description="A compilation of the close-ups from Casey\'s vlog - %s" --category="22" --keywords="vlog, compilation, compile, casey, neistat, caseybot" --privacyStatus="public"'%('%s_compile.avi'%title, title, title))
 
-    compiled_url = db.find({'title':title, 'url':url})[0]
+    compiled_url = db.find({'title':title, 'url':vlog_url})[0]
     return compiled_url["compiled_url"]
 
 if __name__ == '__main__':
