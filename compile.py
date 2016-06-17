@@ -36,7 +36,7 @@ def detect_faces(frames):
                     width = f[2]
                     height = f[3]
                     face_percentage += (width*height)/(len(img)*len(img[0]))*100
-                if face_percentage > 15:
+                if face_percentage > 6:
                     selected_frames.append(counter/frames_count)
         counter += 1
     sys.stdout.write('\n')  
@@ -63,22 +63,22 @@ def doIt(vlog_url):
     matches = db.find({'title':title})
     if matches.count() > 0:
 	for i in matches:
-	    return_url = i['compiled_url']
-	    break
-     	return return_url
+	    if 'compiled_url' in i:
+		return_url = i['compiled_url']
+     		return return_url
     else:
     	db.insert({"title":title})
 
     if (('%s.mp4'%(title)) not in os.listdir('.')):
-        print "there"
         y.get('mp4','360p').download('.')
             
     if '%s_compile.avi'%(title) not in os.listdir("."):
-        print "here"
+
         clip = VideoFileClip('%s.mp4'%(title))
 	opencv_clip = cv2.VideoCapture("%s.mp4"%title)
 	global frames_count
-	frames_count  = int(opencv_clip.get(cv2.cv.CV_CAP_PROP_FPS)) 
+	frames_count  = int(round(opencv_clip.get(cv2.cv.CV_CAP_PROP_FPS))) 
+	print frames_count
         frames = clip.iter_frames()
         selected_frames = detect_faces(frames)
 
@@ -96,4 +96,4 @@ def doIt(vlog_url):
 if __name__ == '__main__':
         
     #doIt("https://www.youtube.com/watch?v=yGtza5cGgK0")
-    doIt("https://www.youtube.com/watch?v=Kk2VTtNR3JA")
+    print doIt("https://www.youtube.com/watch?v=hM1CNRq2byU")
