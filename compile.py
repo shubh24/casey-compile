@@ -10,7 +10,7 @@ client = MongoClient('mongodb://localhost:27017/')
 db = client.CaseyBot.urls
 
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-frames_count = 24
+#frames_count = 24
 
 def cluster(data, maxgap):
     groups = [[data[0]]]
@@ -60,7 +60,14 @@ def doIt(vlog_url):
     title = y.title.replace(" ","-")
     y.set_filename(title)
 
-    db.insert({"url":vlog_url, "title":title})
+    matches = db.find({'title':title})
+    if matches.count() > 0:
+	for i in matches:
+	    return_url = i['compiled_url']
+	    break
+     	return return_url
+    else:
+    	db.insert({"title":title})
 
     if (('%s.mp4'%(title)) not in os.listdir('.')):
         print "there"
@@ -69,7 +76,9 @@ def doIt(vlog_url):
     if '%s_compile.avi'%(title) not in os.listdir("."):
         print "here"
         clip = VideoFileClip('%s.mp4'%(title))
- 
+	opencv_clip = cv2.VideoCapture("%s.mp4"%title)
+	global frames_count
+	frames_count  = int(opencv_clip.get(cv2.cv.CV_CAP_PROP_FPS)) 
         frames = clip.iter_frames()
         selected_frames = detect_faces(frames)
 
@@ -81,10 +90,10 @@ def doIt(vlog_url):
 
     os.system('python upload_video.py --file="%s" --title="%s" --description="A compilation of the close-ups from Casey\'s vlog - %s" --category="22" --keywords="vlog, compilation, compile, casey, neistat, caseybot" --privacyStatus="public"'%('%s_compile.avi'%title, title, title))
 
-    compiled_url = db.find({'title':title, 'url':vlog_url})[0]
+    compiled_url = db.find({'title':title})[0]
     return compiled_url["compiled_url"]
 
 if __name__ == '__main__':
         
     #doIt("https://www.youtube.com/watch?v=yGtza5cGgK0")
-    doIt("https://t.co/bgNVqLQsLE")
+    doIt("https://www.youtube.com/watch?v=Kk2VTtNR3JA")

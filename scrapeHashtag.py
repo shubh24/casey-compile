@@ -19,12 +19,11 @@ class HashStreamer(TwythonStreamer):
             text = data["text"]
             url = re.search("(?P<url>https?://[^\s]+)", text).group("url")
             print url
-            #compiled_url = db.find({'url':url})
-            # if compiled_url.count() > 0:
-            #     for i in compiled_url:
-            #         print i["compiled_url"]
-            # else: 
-            print compile.doIt(url)
+	    try:
+            	compiled_url = compile.doIt(url)
+	    	t.update_status(status='@%s : %s'%(data['user']['screen_name'], compiled_url))
+	    except:
+		print "error in processing"
     def on_error(self, status_code, data):
         print status_code
 
